@@ -1,31 +1,86 @@
 import streamlit as st
 
-st.set_page_config(page_title="لعبة X-O", page_icon="❌⭕")
+st.set_page_config(page_title="لعبة X-O نيون", page_icon="❌⭕", layout="centered")
 
-# --- إضافة العلامة المائية في الخلفية باستخدام CSS ---
+# --- تحويل التصميم إلى ستايل نيون مضيء بالكامل عبر CSS ---
 st.markdown(
     """
     <style>
+    /* تغيير خلفية التطبيق بأكمله لتصبح داكنة تناسب النيون */
+    .stApp {
+        background-color: #0b0c10 !important;
+        color: #ffffff;
+    }
+    
+    /* تصميم العنوان الرئيسي */
+    h1 {
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff, 0 0 40px #00d2ff;
+        font-family: 'Courier New', Courier, monospace;
+        margin-bottom: 30px;
+    }
+    
+    /* تعديل شكل أزرار اللعب (مربعات الـ X-O) */
+    div.stButton > button {
+        background-color: #1f2833 !important;
+        border: 2px solid #45f3ff !important;
+        border-radius: 15px !important;
+        height: 100px !important;
+        font-size: 40px !important;
+        font-weight: bold !important;
+        margin: 5px 0px !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 5px #45f3ff;
+    }
+    
+    /* تأثير عند تمرير الماوس فوق الأزرار */
+    div.stButton > button:hover {
+        background-color: #2b3a4a !important;
+        box-shadow: 0 0 15px #45f3ff, inset 0 0 10px #45f3ff;
+        border-color: #fff !important;
+    }
+
+    /* ستايل مخصص للـ X باللون الأزرق المضيء */
+    div.stButton > button:has(div:contains("❌")), 
+    div.stButton > button:contains("❌") {
+        color: #00d2ff !important;
+        text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff !important;
+        border-color: #00d2ff !important;
+        box-shadow: 0 0 15px #00d2ff !important;
+    }
+
+    /* ستايل مخصص للـ O باللون الوردي/الأحمر المضيء */
+    div.stButton > button:has(div:contains("⭕")), 
+    div.stButton > button:contains("⭕") {
+        color: #ff007f !important;
+        text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f !important;
+        border-color: #ff007f !important;
+        box-shadow: 0 0 15px #ff007f !important;
+    }
+    
+    /* العلامة المائية الشفافة في الأسفل */
     .watermark {
         position: fixed;
-        bottom: 10px;
-        right: 10px;
-        opacity: 0.2; /* درجة الشفافية */
-        font-size: 24px;
+        bottom: 15px;
+        right: 15px;
+        opacity: 0.25;
+        font-size: 20px;
         font-weight: bold;
-        color: #888888;
+        color: #45f3ff;
+        text-shadow: 0 0 5px #45f3ff;
         z-index: 9999;
-        pointer-events: none; /* تمنع حجب الأزرار */
+        pointer-events: none;
         user-select: none;
     }
     </style>
-    <!-- يمكنك تغيير النص المكتوب هنا باسمك أو اسم موقعك -->
-    <div class="watermark">© PY/OMAR MELIGY</div>
+    
+    <div class="watermark">© Developed by Py</div>
     """,
     unsafe_allow_html=True
 )
 
-st.title("❌ لعبة X-O (Tic-Tac-Toe) ⭕")
+st.title("TIC TAC TOE • NEON")
 
 # تهيئة حالة اللعبة في الذاكرة المؤقتة
 if "board" not in st.session_state:
@@ -52,27 +107,27 @@ def check_winner():
         return "تعادل"
     return None
 
-# عرض الدور الحالي أو النتيجة
+# عرض الدور الحالي أو النتيجة بستايل متناسق
 if st.session_state.winner:
     if st.session_state.winner == "تعادل":
         st.warning("انتهت اللعبة تعادلاً! 🤝")
     else:
         st.success(f"اللاعب {st.session_state.winner} هو الفائز! 🎉")
-    if st.button("إعادة اللعب"):
+    if st.button("إعادة اللعب", use_container_width=True):
         st.session_state.board = [""] * 9
         st.session_state.turn = "❌"
         st.session_state.winner = None
         st.rerun()
 else:
-    st.info(f"دور اللاعب: {st.session_state.turn}")
+    st.info(f"دور اللاعب الحالي: {st.session_state.turn}")
 
-# رسم مربعات اللعبة (3 أعمدة × 3 صفوف)
+# رسم مربعات اللعبة (3 أعمدة × 3 صفوف) داخل حاوية منسقة
+st.write("") # مسافة جمالية
 for row in range(3):
     cols = st.columns(3)
     for col in range(3):
         idx = row * 3 + col
         with cols[col]:
-            # زر لكل خانة
             button_label = st.session_state.board[idx] if st.session_state.board[idx] else " "
             if st.button(button_label, key=f"cell_{idx}", use_container_width=True):
                 if not st.session_state.board[idx] and not st.session_state.winner:
