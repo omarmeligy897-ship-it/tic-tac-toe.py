@@ -2,6 +2,29 @@ import streamlit as st
 
 st.set_page_config(page_title="لعبة X-O", page_icon="❌⭕")
 
+# --- إضافة العلامة المائية في الخلفية باستخدام CSS ---
+st.markdown(
+    """
+    <style>
+    .watermark {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        opacity: 0.2; /* درجة الشفافية */
+        font-size: 24px;
+        font-weight: bold;
+        color: #888888;
+        z-index: 9999;
+        pointer-events: none; /* تمنع حجب الأزرار */
+        user-select: none;
+    }
+    </style>
+    <!-- يمكنك تغيير النص المكتوب هنا باسمك أو اسم موقعك -->
+    <div class="watermark">© PY/OMAR MELIGY</div>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("❌ لعبة X-O (Tic-Tac-Toe) ⭕")
 
 # تهيئة حالة اللعبة في الذاكرة المؤقتة
